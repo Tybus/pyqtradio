@@ -11,5 +11,5 @@ class AppWindow(QDialog):
 
 app = QApplication(sys.argv)
 w = AppWindow()
-w.show()
+w.showFullScreen()
 sys.exit(app.exec_())
