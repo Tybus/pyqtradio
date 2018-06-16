@@ -1,11 +1,12 @@
 import sys
+
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog
-from prueba3 import Ui_Radio
+from radio import Ui_gui
 
 class AppWindow(QDialog):
 	def __init__(self):
 		super().__init__()
-		self.ui = Ui_Radio()
+		self.ui = Ui_gui()
 		self.ui.setupUi(self)
 		self.show()
 
