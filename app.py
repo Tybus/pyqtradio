@@ -14,3 +14,5 @@ app = QApplication(sys.argv)
 w = AppWindow()
 w.showFullScreen()
 sys.exit(app.exec_())
+
+

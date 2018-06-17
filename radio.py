@@ -9,11 +9,15 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pexpect
 import image_rc
+from clock import DigitalClock
 
 class Ui_gui(object):
+    playing = False
     proc = pexpect.spawn('gst-play-1.0 1.mp3 2.mp3 3.mp3 4.mp3')
+    
 	
     def setupUi(self, gui):
+        self.proc.send(' ')#
         gui.setObjectName("gui")
         gui.resize(654, 480)
         gui.setStyleSheet("background-color: rgb(32, 74, 135);")
@@ -29,8 +33,13 @@ class Ui_gui(object):
         font.setPointSize(11)
         self.home.setFont(font)
         self.home.setObjectName("home")
-        self.clock = QtWidgets.QTimeEdit(self.home)
-        self.clock.setGeometry(QtCore.QRect(60, 50, 531, 291))
+        ######
+        #self.clock = QtWidgets.QTimeEdit(self.home)
+        #self.clock.setGeometry(QtCore.QRect(60, 50, 531, 291))
+        self.clock = DigitalClock(self.home)
+        self.clock.setGeometry(QtCore.QRect(60, 50, 500, 300))
+        self.clock.show()
+        ######
         font = QtGui.QFont()
         font.setPointSize(30)
         font.setBold(False)
@@ -128,12 +137,13 @@ class Ui_gui(object):
         ################################################################
         ################################################################
         self.playButton.clicked.connect(self.play)
-        #self.stopButton.clicked.connect(self.stop)
+        self.stopButton.clicked.connect(self.stop)
         self.pauseButton.clicked.connect(self.pause)
         #self.soundButton.clicked.connect(self.sound)
         self.nextButton.clicked.connect(self.next)
         self.previousButton.clicked.connect(self.previous)
         #self.muteButton.clicked.connect(self.mute)
+        #self.home. clicked.connect(self.homeClick)
         ################################################################
         ################################################################
         
@@ -145,14 +155,22 @@ class Ui_gui(object):
         self.Radio.setTabText(self.Radio.indexOf(self.mp3), _translate("gui", "MP3"))
         self.Radio.setTabText(self.Radio.indexOf(self.radio), _translate("gui", "Radio"))
 
-    def next(self, gui): 
+    def next(self, gui):
         self.proc.send('n')
         
-    def previous(self, gui): 
+    def previous(self, gui):
         self.proc.send('b')
 
-    def pause(self, gui): 
+    def pause(self, gui):
         self.proc.send(' ')
-
-    def play(self, gui): 
+        
+    def play(self, gui):
         self.proc.send(' ')
+        
+    def stop(self, gui):
+        self.proc.send(' ')
+        
+    def homeClick(self, gui):
+        self.proc.send(' ')
+     
+        
