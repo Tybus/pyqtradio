@@ -13,16 +13,16 @@ from clock import DigitalClock
 
 class Ui_gui(object):
     playing = False
+    currentStation = 88.8
     proc = pexpect.spawn('gst-play-1.0 1.mp3 2.mp3 3.mp3 4.mp3')
-    
-	
     def setupUi(self, gui):
         self.proc.send(' ')#
         gui.setObjectName("gui")
-        gui.resize(654, 480)
+        gui.resize(640, 480)
         gui.setStyleSheet("background-color: rgb(32, 74, 135);")
+        self.gridLayout = QtWidgets.QGridLayout(gui)
+        self.gridLayout.setObjectName("gridLayout")
         self.Radio = QtWidgets.QTabWidget(gui)
-        self.Radio.setGeometry(QtCore.QRect(0, 0, 640, 480))
         font = QtGui.QFont()
         font.setPointSize(30)
         self.Radio.setFont(font)
@@ -40,21 +40,10 @@ class Ui_gui(object):
         self.clock.setGeometry(QtCore.QRect(60, 50, 500, 300))
         self.clock.show()
         ######
-        font = QtGui.QFont()
-        font.setPointSize(30)
-        font.setBold(False)
-        font.setUnderline(False)
-        font.setWeight(50)
-        font.setStrikeOut(False)
-        self.clock.setFont(font)
         self.clock.setObjectName("clock")
         self.Radio.addTab(self.home, "")
         self.mp3 = QtWidgets.QWidget()
         self.mp3.setObjectName("mp3")
-        self.volumeMp3 = QtWidgets.QSlider(self.mp3)
-        self.volumeMp3.setGeometry(QtCore.QRect(20, 10, 81, 381))
-        self.volumeMp3.setOrientation(QtCore.Qt.Vertical)
-        self.volumeMp3.setObjectName("volumeMp3")
         self.playButton = QtWidgets.QPushButton(self.mp3)
         self.playButton.setGeometry(QtCore.QRect(320, 290, 61, 61))
         font = QtGui.QFont()
@@ -118,23 +107,42 @@ class Ui_gui(object):
         self.Radio.addTab(self.mp3, "")
         self.radio = QtWidgets.QWidget()
         self.radio.setObjectName("radio")
-        self.lcdNumber = QtWidgets.QLCDNumber(self.radio)
-        self.lcdNumber.setGeometry(QtCore.QRect(210, 0, 321, 121))
-        self.lcdNumber.setObjectName("lcdNumber")
-        self.dial = QtWidgets.QDial(self.radio)
-        self.dial.setGeometry(QtCore.QRect(300, 170, 231, 231))
-        self.dial.setObjectName("dial")
-        self.verticalSlider = QtWidgets.QSlider(self.radio)
-        self.verticalSlider.setGeometry(QtCore.QRect(30, 10, 91, 391))
-        self.verticalSlider.setOrientation(QtCore.Qt.Vertical)
-        self.verticalSlider.setObjectName("verticalSlider")
+        self.stationDisplay = QtWidgets.QLCDNumber(self.radio)
+        self.stationDisplay.setGeometry(QtCore.QRect(140, 40, 261, 131))
+        self.stationDisplay.setSmallDecimalPoint(True)
+        self.stationDisplay.setSegmentStyle(QtWidgets.QLCDNumber.Filled)
+        self.stationDisplay.setProperty("value", self.currentStation)############################
+        self.stationDisplay.setObjectName("stationDisplay")
+        self.previousStation = QtWidgets.QPushButton(self.radio)
+        self.previousStation.setGeometry(QtCore.QRect(180, 200, 71, 81))
+        self.previousStation.setStyleSheet("background-image: url(:/images/previous.png);\n"
+"image: url(:/images/previous.png);")
+        self.previousStation.setText("")
+        self.previousStation.setObjectName("previousStation")
+        self.nextStation = QtWidgets.QPushButton(self.radio)
+        self.nextStation.setGeometry(QtCore.QRect(340, 200, 71, 81))
+        self.nextStation.setStyleSheet("background-image: url(:/images/next.png);\n"
+"image: url(:/images/next.png);")
+        self.nextStation.setText("")
+        self.nextStation.setObjectName("nextStation")
+        self.playRadio = QtWidgets.QPushButton(self.radio)
+        self.playRadio.setGeometry(QtCore.QRect(260, 200, 71, 81))
+        self.playRadio.setStyleSheet("background-image: url(:/images/play-button.png);\n"
+"image: url(:/images/play-button.png);")
+        self.playRadio.setText("")
+        self.playRadio.setObjectName("playRadio")
+        self.textBrowser = QtWidgets.QTextBrowser(self.radio)
+        self.textBrowser.setGeometry(QtCore.QRect(410, 130, 81, 51))
+        self.textBrowser.setObjectName("textBrowser")
         self.Radio.addTab(self.radio, "")
+        self.gridLayout.addWidget(self.Radio, 0, 0, 1, 1)
+        self.actionabc = QtWidgets.QAction(gui)
+        self.actionabc.setObjectName("actionabc")
 
         self.retranslateUi(gui)
-        self.Radio.setCurrentIndex(1)
+        self.Radio.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(gui)
-        
-        ################################################################
+
         ################################################################
         self.playButton.clicked.connect(self.play)
         self.stopButton.clicked.connect(self.stop)
@@ -144,16 +152,23 @@ class Ui_gui(object):
         self.previousButton.clicked.connect(self.previous)
         #self.muteButton.clicked.connect(self.mute)
         #self.home. clicked.connect(self.homeClick)
+        self.playRadio.clicked.connect(self.stopMP3)
+        self.nextStation.clicked.connect(self.passNextStation)
+        self.previousStation.clicked.connect(self.passPreviousStation)
         ################################################################
-        ################################################################
-        
 
     def retranslateUi(self, gui):
         _translate = QtCore.QCoreApplication.translate
         gui.setWindowTitle(_translate("gui", "Radio"))
         self.Radio.setTabText(self.Radio.indexOf(self.home), _translate("gui", "Home"))
         self.Radio.setTabText(self.Radio.indexOf(self.mp3), _translate("gui", "MP3"))
+        self.textBrowser.setHtml(_translate("gui", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:20pt;\">MHz</span></p></body></html>"))
         self.Radio.setTabText(self.Radio.indexOf(self.radio), _translate("gui", "Radio"))
+        self.actionabc.setText(_translate("gui", "abc"))
 
     def next(self, gui):
         self.proc.send('n')
@@ -165,12 +180,23 @@ class Ui_gui(object):
         self.proc.send(' ')
         
     def play(self, gui):
+        self.playing = True
         self.proc.send(' ')
+        
+    def stopMP3(self, gui):
+        if self.playing == True:
+            self.proc.send(' ')
+            self.playing = False
         
     def stop(self, gui):
         self.proc.send(' ')
         
     def homeClick(self, gui):
         self.proc.send(' ')
-     
-        
+    
+    def passNextStation(self, gui):
+        self.currentStation+=0.1
+        self.stationDisplay.setProperty("value", self.currentStation)
+    def passPreviousStation(self, gui):
+        self.currentStation-=0.1
+        self.stationDisplay.setProperty("value", self.currentStation)
