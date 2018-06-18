@@ -10,11 +10,18 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import pexpect
 import image_rc
 from clock import DigitalClock
+import glob
 
 class Ui_gui(object):
     playing = False
+    #currentSong = 'EiE Theme'
+    currentSongIndex = 0
+    playList = glob.glob('*.mp3')
+    playListJoin = ' '.join(glob.glob('*.mp3'))  
+    playListLengh = len(playList)
     currentStation = 88.8
-    proc = pexpect.spawn('gst-play-1.0 1.mp3 2.mp3 3.mp3 4.mp3')
+    proc = pexpect.spawn('gst-play-1.0 '+ playListJoin)
+    
     def setupUi(self, gui):
         self.proc.send(' ')#
         gui.setObjectName("gui")
@@ -33,6 +40,8 @@ class Ui_gui(object):
         font.setPointSize(11)
         self.home.setFont(font)
         self.home.setObjectName("home")
+        self.gridLayout_3 = QtWidgets.QGridLayout(self.home)
+        self.gridLayout_3.setObjectName("gridLayout_3")
         ######
         #self.clock = QtWidgets.QTimeEdit(self.home)
         #self.clock.setGeometry(QtCore.QRect(60, 50, 531, 291))
@@ -40,57 +49,19 @@ class Ui_gui(object):
         self.clock.setGeometry(QtCore.QRect(60, 50, 500, 300))
         self.clock.show()
         ######
-        self.clock.setObjectName("clock")
+        self.gridLayout_3.addWidget(self.clock, 0, 0, 1, 1)
         self.Radio.addTab(self.home, "")
         self.mp3 = QtWidgets.QWidget()
         self.mp3.setObjectName("mp3")
-        self.playButton = QtWidgets.QPushButton(self.mp3)
-        self.playButton.setGeometry(QtCore.QRect(320, 290, 61, 61))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.playButton.setFont(font)
-        self.playButton.setStyleSheet("background-image: url(:/images/play-button.png);\n"
-"image: url(:/images/play-button.png);")
-        self.playButton.setText("")
-        self.playButton.setObjectName("playButton")
-        self.muteButton = QtWidgets.QPushButton(self.mp3)
-        self.muteButton.setGeometry(QtCore.QRect(460, 290, 61, 61))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.muteButton.setFont(font)
-        self.muteButton.setStyleSheet("background-image: url(:/images/mute.png);\n"
-"image: url(:/images/mute.png);")
-        self.muteButton.setText("")
-        self.muteButton.setObjectName("muteButton")
-        self.previousButton = QtWidgets.QPushButton(self.mp3)
-        self.previousButton.setGeometry(QtCore.QRect(250, 290, 61, 61))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.previousButton.setFont(font)
-        self.previousButton.setStyleSheet("background-image: url(:/images/previous.png);\n"
-"image: url(:/images/previous.png);")
-        self.previousButton.setText("")
-        self.previousButton.setObjectName("previousButton")
-        self.soundButton = QtWidgets.QPushButton(self.mp3)
-        self.soundButton.setGeometry(QtCore.QRect(530, 290, 61, 61))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.soundButton.setFont(font)
-        self.soundButton.setStyleSheet("background-image: url(:/images/volume.png);\n"
-"image: url(:/images/volume.png);")
-        self.soundButton.setText("")
-        self.soundButton.setObjectName("soundButton")
-        self.nextButton = QtWidgets.QPushButton(self.mp3)
-        self.nextButton.setGeometry(QtCore.QRect(390, 290, 61, 61))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.nextButton.setFont(font)
-        self.nextButton.setStyleSheet("background-image: url(:/images/next.png);\n"
-"image: url(:/images/next.png);")
-        self.nextButton.setText("")
-        self.nextButton.setObjectName("nextButton")
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.mp3)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.stopButton = QtWidgets.QPushButton(self.mp3)
+        self.stopButton.setStyleSheet("image: url(:/images/stop.png);\n"
+"background-image: url(:/images/stop.png);")
+        self.stopButton.setText("")
+        self.stopButton.setObjectName("stopButton")
+        self.gridLayout_2.addWidget(self.stopButton, 0, 0, 1, 1)
         self.pauseButton = QtWidgets.QPushButton(self.mp3)
-        self.pauseButton.setGeometry(QtCore.QRect(180, 290, 61, 61))
         font = QtGui.QFont()
         font.setPointSize(9)
         self.pauseButton.setFont(font)
@@ -98,42 +69,81 @@ class Ui_gui(object):
 "image: url(:/images/pause.png);")
         self.pauseButton.setText("")
         self.pauseButton.setObjectName("pauseButton")
-        self.stopButton = QtWidgets.QPushButton(self.mp3)
-        self.stopButton.setGeometry(QtCore.QRect(110, 290, 61, 61))
-        self.stopButton.setStyleSheet("image: url(:/images/stop.png);\n"
-"background-image: url(:/images/stop.png);")
-        self.stopButton.setText("")
-        self.stopButton.setObjectName("stopButton")
+        self.gridLayout_2.addWidget(self.pauseButton, 0, 1, 1, 1)
+        self.previousButton = QtWidgets.QPushButton(self.mp3)
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.previousButton.setFont(font)
+        self.previousButton.setStyleSheet("background-image: url(:/images/previous.png);\n"
+"image: url(:/images/previous.png);")
+        self.previousButton.setText("")
+        self.previousButton.setObjectName("previousButton")
+        self.gridLayout_2.addWidget(self.previousButton, 0, 2, 1, 1)
+        self.playButton = QtWidgets.QPushButton(self.mp3)
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.playButton.setFont(font)
+        self.playButton.setStyleSheet("background-image: url(:/images/play-button.png);\n"
+"image: url(:/images/play-button.png);")
+        self.playButton.setText("")
+        self.playButton.setObjectName("playButton")
+        self.gridLayout_2.addWidget(self.playButton, 0, 3, 1, 1)
+        self.nextButton = QtWidgets.QPushButton(self.mp3)
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.nextButton.setFont(font)
+        self.nextButton.setStyleSheet("background-image: url(:/images/next.png);\n"
+"image: url(:/images/next.png);")
+        self.nextButton.setText("")
+        self.nextButton.setObjectName("nextButton")
+        self.gridLayout_2.addWidget(self.nextButton, 0, 4, 1, 1)
+        self.muteButton = QtWidgets.QPushButton(self.mp3)
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.muteButton.setFont(font)
+        self.muteButton.setStyleSheet("background-image: url(:/images/mute.png);\n"
+"image: url(:/images/mute.png);")
+        self.muteButton.setText("")
+        self.muteButton.setObjectName("muteButton")
+        self.gridLayout_2.addWidget(self.muteButton, 0, 5, 1, 1)
+        self.soundButton = QtWidgets.QPushButton(self.mp3)
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.soundButton.setFont(font)
+        self.soundButton.setStyleSheet("background-image: url(:/images/volume.png);\n"
+"image: url(:/images/volume.png);")
+        self.soundButton.setText("")
+        self.soundButton.setObjectName("soundButton")
+        self.gridLayout_2.addWidget(self.soundButton, 0, 6, 1, 1)
         self.Radio.addTab(self.mp3, "")
         self.radio = QtWidgets.QWidget()
         self.radio.setObjectName("radio")
-        self.stationDisplay = QtWidgets.QLCDNumber(self.radio)
-        self.stationDisplay.setGeometry(QtCore.QRect(140, 40, 261, 131))
-        self.stationDisplay.setSmallDecimalPoint(True)
-        self.stationDisplay.setSegmentStyle(QtWidgets.QLCDNumber.Filled)
-        self.stationDisplay.setProperty("value", self.currentStation)############################
-        self.stationDisplay.setObjectName("stationDisplay")
+        self.gridLayout_4 = QtWidgets.QGridLayout(self.radio)
+        self.gridLayout_4.setObjectName("gridLayout_4")
         self.previousStation = QtWidgets.QPushButton(self.radio)
-        self.previousStation.setGeometry(QtCore.QRect(180, 200, 71, 81))
         self.previousStation.setStyleSheet("background-image: url(:/images/previous.png);\n"
 "image: url(:/images/previous.png);")
         self.previousStation.setText("")
         self.previousStation.setObjectName("previousStation")
+        self.gridLayout_4.addWidget(self.previousStation, 1, 0, 1, 1)
         self.nextStation = QtWidgets.QPushButton(self.radio)
-        self.nextStation.setGeometry(QtCore.QRect(340, 200, 71, 81))
         self.nextStation.setStyleSheet("background-image: url(:/images/next.png);\n"
 "image: url(:/images/next.png);")
         self.nextStation.setText("")
         self.nextStation.setObjectName("nextStation")
+        self.gridLayout_4.addWidget(self.nextStation, 1, 2, 1, 1)
         self.playRadio = QtWidgets.QPushButton(self.radio)
-        self.playRadio.setGeometry(QtCore.QRect(260, 200, 71, 81))
         self.playRadio.setStyleSheet("background-image: url(:/images/play-button.png);\n"
 "image: url(:/images/play-button.png);")
         self.playRadio.setText("")
         self.playRadio.setObjectName("playRadio")
-        self.textBrowser = QtWidgets.QTextBrowser(self.radio)
-        self.textBrowser.setGeometry(QtCore.QRect(410, 130, 81, 51))
-        self.textBrowser.setObjectName("textBrowser")
+        self.gridLayout_4.addWidget(self.playRadio, 1, 1, 1, 1)
+        self.stationDisplay = QtWidgets.QLCDNumber(self.radio)
+        self.stationDisplay.setSmallDecimalPoint(True)
+        self.stationDisplay.setSegmentStyle(QtWidgets.QLCDNumber.Filled)
+        self.stationDisplay.setProperty("value", 88.8)
+        self.stationDisplay.setObjectName("stationDisplay")
+        self.gridLayout_4.addWidget(self.stationDisplay, 0, 0, 1, 3)
         self.Radio.addTab(self.radio, "")
         self.gridLayout.addWidget(self.Radio, 0, 0, 1, 1)
         self.actionabc = QtWidgets.QAction(gui)
@@ -142,8 +152,21 @@ class Ui_gui(object):
         self.retranslateUi(gui)
         self.Radio.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(gui)
-
+        
+        self.stationDisplay.setProperty("value", self.currentStation)############################
         ################################################################
+        self.label = QtWidgets.QLabel(self.playList[self.currentSongIndex],self.mp3)
+        self.label.setGeometry(10,10,400,100)
+        font000 = QtGui.QFont()
+        font000.setPointSize(40)
+        self.label.setFont(font000)
+        
+        self.label2 = QtWidgets.QLabel('MHz',self.radio)
+        self.label2.setGeometry(410,90,100,80)
+        font000 = QtGui.QFont()
+        font000.setPointSize(35)
+        self.label2.setFont(font000)
+        #
         self.playButton.clicked.connect(self.play)
         self.stopButton.clicked.connect(self.stop)
         self.pauseButton.clicked.connect(self.pause)
@@ -157,24 +180,26 @@ class Ui_gui(object):
         self.previousStation.clicked.connect(self.passPreviousStation)
         ################################################################
 
+
     def retranslateUi(self, gui):
         _translate = QtCore.QCoreApplication.translate
         gui.setWindowTitle(_translate("gui", "Radio"))
         self.Radio.setTabText(self.Radio.indexOf(self.home), _translate("gui", "Home"))
         self.Radio.setTabText(self.Radio.indexOf(self.mp3), _translate("gui", "MP3"))
-        self.textBrowser.setHtml(_translate("gui", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:20pt;\">MHz</span></p></body></html>"))
         self.Radio.setTabText(self.Radio.indexOf(self.radio), _translate("gui", "Radio"))
         self.actionabc.setText(_translate("gui", "abc"))
 
     def next(self, gui):
-        self.proc.send('n')
+        if self.currentSongIndex+1<self.playListLengh:
+            self.proc.send('n')
+            self.currentSongIndex+=1
+            self.label.setText(self.playList[self.currentSongIndex%self.playListLengh])
+        #print(self.playList)
         
     def previous(self, gui):
         self.proc.send('b')
+        self.currentSongIndex-=1
+        self.label.setText(self.playList[self.currentSongIndex%playListLengh])
 
     def pause(self, gui):
         self.proc.send(' ')
@@ -182,6 +207,7 @@ class Ui_gui(object):
     def play(self, gui):
         self.playing = True
         self.proc.send(' ')
+        #self.label.setText('Button clicked.')
         
     def stopMP3(self, gui):
         if self.playing == True:
