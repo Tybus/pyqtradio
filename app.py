@@ -3,7 +3,7 @@ playListPath = '/home/gab/Qt5/RadioGUI/pyqtradio-master/'
 
 
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog
-from radio5 import Ui_gui
+from radio import Ui_gui
 
 class AppWindow(QDialog):
 	def __init__(self):
