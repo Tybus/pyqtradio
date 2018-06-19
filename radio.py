@@ -16,11 +16,20 @@ class Ui_gui(object):
     playing = False
     #currentSong = 'EiE Theme'
     currentSongIndex = 0
-    playList = glob.glob('*.mp3')
-    playListJoin = ' '.join(glob.glob('*.mp3'))  
-    playListLengh = len(playList)
+    playListRoute = ''
+    #playList = glob.glob(self.playListRoute+'*.mp3')
+    #playListJoin = ' '.join(glob.glob(self.playListRoute+'*.mp3'))#glob.glob('/home/gab/Qt5/RadioGUI/pyqtradio-master/*.mp3')  
+    #playListLengh = len(playList)
     currentStation = 88.8
-    proc = pexpect.spawn('gst-play-1.0 '+ playListJoin)
+    #proc = pexpect.spawn('gst-play-1.0 '+ playListJoin)
+    
+    def __init__(self, playListRoute):
+        self.playListRoute = playListRoute
+        self.playList = glob.glob(playListRoute+'*.mp3')
+        self.playListJoin = ' '.join(glob.glob(playListRoute+'*.mp3'))
+        self.proc = pexpect.spawn('gst-play-1.0 '+ self.playListJoin)
+        self.playListLengh = len(self.playList)
+        print(self.playListRoute)
     
     def setupUi(self, gui):
         self.proc.send(' ')#
@@ -156,7 +165,7 @@ class Ui_gui(object):
         self.stationDisplay.setProperty("value", self.currentStation)############################
         ################################################################
         self.label = QtWidgets.QLabel(self.playList[self.currentSongIndex],self.mp3)
-        self.label.setGeometry(10,10,400,100)
+        self.label.setGeometry(10,10,600,100)
         font000 = QtGui.QFont()
         font000.setPointSize(40)
         self.label.setFont(font000)
