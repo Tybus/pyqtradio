@@ -164,7 +164,10 @@ class Ui_gui(object):
         
         self.stationDisplay.setProperty("value", self.currentStation)############################
         ################################################################
-        self.label = QtWidgets.QLabel(self.playList[self.currentSongIndex],self.mp3)
+        try:
+            self.label = QtWidgets.QLabel(self.playList[self.currentSongIndex],self.mp3)
+        except:
+            self.label = QtWidgets.QLabel('Eie Theme',self.mp3)
         self.label.setGeometry(10,10,600,100)
         font000 = QtGui.QFont()
         font000.setPointSize(40)
@@ -202,13 +205,18 @@ class Ui_gui(object):
         if self.currentSongIndex+1<self.playListLengh:
             self.proc.send('n')
             self.currentSongIndex+=1
-            self.label.setText(self.playList[self.currentSongIndex%self.playListLengh])
-        #print(self.playList)
+            try:
+                self.label.setText(self.playList[self.currentSongIndex%playListLengh])
+            except:
+                self.label.setText('no song')   
         
     def previous(self, gui):
         self.proc.send('b')
         self.currentSongIndex-=1
-        self.label.setText(self.playList[self.currentSongIndex%playListLengh])
+        try:
+            self.label.setText(self.playList[self.currentSongIndex%playListLengh])
+        except:
+            self.label.setText('no song')            
 
     def pause(self, gui):
         self.proc.send(' ')
