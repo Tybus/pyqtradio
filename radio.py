@@ -207,7 +207,7 @@ class Ui_gui(object):
             self.currentSongIndex+=1
             print(self.playList)
             print(self.currentSongIndex)
-            print(playListLengh)
+            print(self.playListLengh)
             try:
                 self.label.setText(self.playList[self.currentSongIndex%self.playListLengh])
             except:
@@ -215,11 +215,12 @@ class Ui_gui(object):
         
     def previous(self, gui):
         self.proc.send('b')
-        self.currentSongIndex-=1
-        try:
-            self.label.setText(self.playList[self.currentSongIndex%self.playListLengh])
-        except:
-            self.label.setText('no song')            
+        if self.currentSongIndex>0:
+            self.currentSongIndex-=1
+            try:
+                self.label.setText(self.playList[self.currentSongIndex%self.playListLengh])
+            except:
+                self.label.setText('no song')            
 
     def pause(self, gui):
         self.proc.send(' ')
@@ -246,4 +247,3 @@ class Ui_gui(object):
     def passPreviousStation(self, gui):
         self.currentStation-=0.1
         self.stationDisplay.setProperty("value", self.currentStation)
-
