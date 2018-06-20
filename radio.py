@@ -156,8 +156,8 @@ class Ui_gui(object):
         self.gridLayout_4.addWidget(self.stationDisplay, 0, 0, 1, 3)
         self.Radio.addTab(self.radio, "")
         self.gridLayout.addWidget(self.Radio, 0, 0, 1, 1)
-        self.actionabc = QtWidgets.QAction(gui)
-        self.actionabc.setObjectName("actionabc")
+        #self.actionabc = QtWidgets.QAction(gui)
+        #self.actionabc.setObjectName("actionabc")
 
         self.retranslateUi(gui)
         self.Radio.setCurrentIndex(0)
@@ -171,7 +171,7 @@ class Ui_gui(object):
             self.label = QtWidgets.QLabel('Eie Theme',self.mp3)
         self.label.setGeometry(10,10,600,100)
         font000 = QtGui.QFont()
-        font000.setPointSize(40)
+        font000.setPointSize(10)
         self.label.setFont(font000)
         
         self.label2 = QtWidgets.QLabel('MHz',self.radio)
@@ -199,14 +199,17 @@ class Ui_gui(object):
         self.Radio.setTabText(self.Radio.indexOf(self.home), _translate("gui", "Home"))
         self.Radio.setTabText(self.Radio.indexOf(self.mp3), _translate("gui", "MP3"))
         self.Radio.setTabText(self.Radio.indexOf(self.radio), _translate("gui", "Radio"))
-        self.actionabc.setText(_translate("gui", "abc"))
+        #self.actionabc.setText(_translate("gui", "abc"))
 
     def next(self, gui):
         if self.currentSongIndex+1<self.playListLengh:
             self.proc.send('n')
             self.currentSongIndex+=1
+            print(self.playList)
+            print(self.currentSongIndex)
+            print(playListLengh)
             try:
-                self.label.setText(self.playList[self.currentSongIndex%playListLengh])
+                self.label.setText(self.playList[self.currentSongIndex%self.playListLengh])
             except:
                 self.label.setText('no song')   
         
@@ -214,7 +217,7 @@ class Ui_gui(object):
         self.proc.send('b')
         self.currentSongIndex-=1
         try:
-            self.label.setText(self.playList[self.currentSongIndex%playListLengh])
+            self.label.setText(self.playList[self.currentSongIndex%self.playListLengh])
         except:
             self.label.setText('no song')            
 
@@ -243,5 +246,4 @@ class Ui_gui(object):
     def passPreviousStation(self, gui):
         self.currentStation-=0.1
         self.stationDisplay.setProperty("value", self.currentStation)
-
 
