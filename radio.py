@@ -14,17 +14,11 @@ import glob
 import os
 
 class Ui_gui(object):
-    playing = False
+    #playing = False
     playingMP3 = False
     playingRadio = False
     currentSongIndex = 0
     currentStation = 88.8
-    #currentSong = 'EiE Theme'
-    #playListRoute = ''
-    #playList = glob.glob(self.playListRoute+'*.mp3')
-    #playListJoin = ' '.join(glob.glob(self.playListRoute+'*.mp3'))#glob.glob('/home/gab/Qt5/RadioGUI/pyqtradio-master/*.mp3')  
-    #playListLengh = len(playList)
-    #proc = pexpect.spawn('gst-play-1.0 '+ playListJoin)
     
     def __init__(self, playListRoute):
         self.playListRoute = playListRoute
@@ -33,10 +27,8 @@ class Ui_gui(object):
         self.proc = pexpect.spawn('gst-play-1.0 '+ self.playListJoin)
         self.proc.send(' ')#
         self.playListLengh = len(self.playList)
-        #print(self.playListRoute)
         
     def setupUi(self, gui):
-        #self.proc.send(' ')#
         gui.setObjectName("gui")
         gui.resize(640, 480)
         gui.setStyleSheet("background-color: rgb(32, 74, 135);")
@@ -56,8 +48,6 @@ class Ui_gui(object):
         self.gridLayout_3 = QtWidgets.QGridLayout(self.home)
         self.gridLayout_3.setObjectName("gridLayout_3")
         ######
-        #self.clock = QtWidgets.QTimeEdit(self.home)
-        #self.clock.setGeometry(QtCore.QRect(60, 50, 531, 291))
         self.clock = DigitalClock(self.home)
         self.clock.setGeometry(QtCore.QRect(60, 50, 500, 300))
         self.clock.show()
@@ -159,9 +149,6 @@ class Ui_gui(object):
         self.gridLayout_4.addWidget(self.stationDisplay, 0, 0, 1, 3)
         self.Radio.addTab(self.radio, "")
         self.gridLayout.addWidget(self.Radio, 0, 0, 1, 1)
-        #self.actionabc = QtWidgets.QAction(gui)
-        #self.actionabc.setObjectName("actionabc")
-
         self.retranslateUi(gui)
         self.Radio.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(gui)
@@ -174,23 +161,22 @@ class Ui_gui(object):
             self.label = QtWidgets.QLabel('Eie Theme',self.mp3)
         self.label.setGeometry(10,10,600,100)
         font000 = QtGui.QFont()
-        font000.setPointSize(10)
+        font000.setPointSize(20)
         self.label.setFont(font000)
         
-        self.label2 = QtWidgets.QLabel('MHz',self.radio)
-        self.label2.setGeometry(410,90,100,80)
+        self.labelFrecuencyUnits = QtWidgets.QLabel('MHz',self.radio)
+        self.labelFrecuencyUnits.setGeometry(410,90,100,80)
         font000 = QtGui.QFont()
         font000.setPointSize(35)
-        self.label2.setFont(font000)
+        self.labelFrecuencyUnits.setFont(font000)
         #
         self.playButton.clicked.connect(self.play)
-        self.stopButton.clicked.connect(self.stop)
+        self.stopButton.clicked.connect(self.stopMP3)
         self.pauseButton.clicked.connect(self.pause)
         #self.soundButton.clicked.connect(self.sound)
         self.nextButton.clicked.connect(self.next)
         self.previousButton.clicked.connect(self.previous)
         #self.muteButton.clicked.connect(self.mute)
-        #self.home. clicked.connect(self.homeClick)
         self.playRadio.clicked.connect(self.stopMP3)
         self.nextStation.clicked.connect(self.passNextStation)
         self.previousStation.clicked.connect(self.passPreviousStation)
@@ -202,15 +188,11 @@ class Ui_gui(object):
         self.Radio.setTabText(self.Radio.indexOf(self.home), _translate("gui", "Home"))
         self.Radio.setTabText(self.Radio.indexOf(self.mp3), _translate("gui", "MP3"))
         self.Radio.setTabText(self.Radio.indexOf(self.radio), _translate("gui", "Radio"))
-        #self.actionabc.setText(_translate("gui", "abc"))
 
     def next(self, gui):
         if self.currentSongIndex+1<self.playListLengh:
             self.proc.send('n')
             self.currentSongIndex+=1
-            #print(self.playList)
-            #print(self.currentSongIndex)
-            #print(self.playListLengh)
             try:
                 self.label.setText(os.path.split(self.playList[self.currentSongIndex%self.playListLengh])[1])
             except:
@@ -227,23 +209,25 @@ class Ui_gui(object):
                 self.label.setText('no song')            
 
     def pause(self, gui):
-        self.proc.send(' ')
+        if self.playingMP3:
+            self.proc.send(' ')
+            self.playingMP3 = False
         
     def play(self, gui):
-        self.playing = True
-        self.proc.send(' ')
-        #self.label.setText('Button clicked.')
+        if not self.playingMP3:
+            self.playingMP3 = True
+            self.playRadio = False
+            self.proc.send(' ')
         
     def stopMP3(self, gui):
-        if self.playing == True:
+        if self.playingMP3:
             self.proc.send(' ')
-            self.playing = False
+            self.playingMP3 = False
         
     def stop(self, gui):
-        self.proc.send(' ')
-        
-    def homeClick(self, gui):
-        self.proc.send(' ')
+        if self.playingMP3:
+            self.proc.send(' ')
+            self.playingMP3 = False
     
     def passNextStation(self, gui):
         self.currentStation+=0.1
@@ -251,3 +235,4 @@ class Ui_gui(object):
     def passPreviousStation(self, gui):
         self.currentStation-=0.1
         self.stationDisplay.setProperty("value", self.currentStation)
+
