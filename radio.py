@@ -15,7 +15,7 @@ import os
 
 class Ui_gui(object):
     #playing = False
-    playingMP3 = False
+    playingMP3 = True
     playingRadio = False
     currentSongIndex = 0
     currentStation = 88.8
