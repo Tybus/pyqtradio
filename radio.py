@@ -11,16 +11,19 @@ import pexpect
 import image_rc
 from clock import DigitalClock
 import glob
+import os
 
 class Ui_gui(object):
     playing = False
-    #currentSong = 'EiE Theme'
+    playingMP3 = False
+    playingRadio = False
     currentSongIndex = 0
-    playListRoute = ''
+    currentStation = 88.8
+    #currentSong = 'EiE Theme'
+    #playListRoute = ''
     #playList = glob.glob(self.playListRoute+'*.mp3')
     #playListJoin = ' '.join(glob.glob(self.playListRoute+'*.mp3'))#glob.glob('/home/gab/Qt5/RadioGUI/pyqtradio-master/*.mp3')  
     #playListLengh = len(playList)
-    currentStation = 88.8
     #proc = pexpect.spawn('gst-play-1.0 '+ playListJoin)
     
     def __init__(self, playListRoute):
@@ -166,7 +169,7 @@ class Ui_gui(object):
         self.stationDisplay.setProperty("value", self.currentStation)############################
         ################################################################
         try:
-            self.label = QtWidgets.QLabel(self.playList[self.currentSongIndex],self.mp3)
+            self.label = QtWidgets.QLabel(os.path.split(self.playList[self.currentSongIndex%self.playListLengh])[1],self.mp3)
         except:
             self.label = QtWidgets.QLabel('Eie Theme',self.mp3)
         self.label.setGeometry(10,10,600,100)
@@ -205,11 +208,11 @@ class Ui_gui(object):
         if self.currentSongIndex+1<self.playListLengh:
             self.proc.send('n')
             self.currentSongIndex+=1
-            print(self.playList)
-            print(self.currentSongIndex)
-            print(self.playListLengh)
+            #print(self.playList)
+            #print(self.currentSongIndex)
+            #print(self.playListLengh)
             try:
-                self.label.setText(self.playList[self.currentSongIndex%self.playListLengh])
+                self.label.setText(os.path.split(self.playList[self.currentSongIndex%self.playListLengh])[1])
             except:
                 self.label.setText('no song')   
         
@@ -218,7 +221,8 @@ class Ui_gui(object):
         if self.currentSongIndex>0:
             self.currentSongIndex-=1
             try:
-                self.label.setText(self.playList[self.currentSongIndex%self.playListLengh])
+                self.label.setText(os.path.split(self.playList[self.currentSongIndex%self.playListLengh])[1])
+
             except:
                 self.label.setText('no song')            
 
