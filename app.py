@@ -1,5 +1,5 @@
 import sys
-playListPath = '/home/gab/Qt5/RadioGUI/pyqtradio-master/'
+playListPath = './'
 
 
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog
